@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>صانع بطاقات العيد | تصميم 4K واحترافي</title>
+    <meta name="description" content="صمم بطاقة تهنئة عيد الفطر الخاصة بك بجودة 4K بتصميم ملكي.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+
+    <style>
+        :root {
+            --primary-blue: #040d21;
+            --accent-gold: #ffd700;
+            --card-width: 1080px;
+            --card-height: 1350px;
+            --royal-gradient: linear-gradient(135deg, #0f1c3f 0%, #081b4b 50%, #1a3ea7 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--primary-blue);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+            overflow-x: hidden;
+        }
+
+        #stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .container {
+            z-index: 2;
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 1.4rem;
+            color: var(--accent-gold);
+            margin: 10px 0;
+            text-shadow: 0 2px 10px rgba(255, 215, 0, 0.3);
+        }
+
+        /* --- SLIDER WITH ARROWS --- */
+        .slider-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 5px;
+        }
+
+        .bg-selector {
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            gap: 12px;
+            padding: 10px;
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+        }
+
+        .bg-selector::-webkit-scrollbar {
+            display: none;
+        }
+
+        .nav-btn {
+            background: var(--accent-gold);
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            flex-shrink: 0;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .bg-option {
+            flex: 0 0 65px;
+            height: 65px;
+            border-radius: 12px;
+            cursor: pointer;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background-size: cover;
+            background-position: center;
+            transition: 0.3s ease;
+        }
+
+        .bg-option.active {
+            border-color: var(--accent-gold);
+            transform: scale(1.1);
+            box-shadow: 0 0 15px var(--accent-gold);
+        }
+
+        /* --- EDITOR --- */
+        .editor-box {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 15px;
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        input,
+        textarea {
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-family: 'Tajawal';
+            background: white;
+            color: #333;
+            width: 100%;
+        }
+
+        .upload-btn {
+            background: linear-gradient(45deg, #1b3ea7, #2a52be);
+            color: white;
+            padding: 12px;
+            text-align: center;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: 1px solid var(--accent-gold);
+        }
+
+        /* --- PREVIEW & NEW PHOTO FRAME --- */
+        .preview-area {
+            width: 100%;
+            aspect-ratio: 1080 / 1350;
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .scale-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: var(--card-width);
+            height: var(--card-height);
+            transform-origin: top left;
+        }
+
+        .card {
+            width: 100%;
+            height: 100%;
+            background-image: var(--royal-gradient);
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 80px;
+        }
+
+        /* THE MODERN ARCH FRAME */
+        .photo-frame {
+            width: 520px;
+            height: 620px;
+            background: white;
+            padding: 15px;
+            display: none;
+            position: relative;
+            /* Modern Islamic Arch Shape */
+            clip-path: polygon(50% 0%, 100% 20%, 100% 100%, 0 100%, 0 20%);
+            filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.5));
+            border-bottom: 12px solid var(--accent-gold);
+        }
+
+        .user-photo-final {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            clip-path: polygon(50% 0%, 100% 20%, 100% 100%, 0 100%, 0 20%);
+        }
+
+        .text-content-wrapper {
+            position: absolute;
+            bottom: 80px;
+            width: 100%;
+            padding: 0 60px;
+            text-align: center;
+        }
+
+        .generated-greeting {
+            font-size: 42px;
+            line-height: 1.6;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 50px;
+            border-radius: 40px;
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--accent-gold);
+        }
+
+        .highlight-gold {
+            color: var(--accent-gold);
+            font-weight: 800;
+        }
+
+        .sender-block {
+            font-size: 34px;
+            margin-top: 25px;
+            border-top: 2px solid var(--accent-gold);
+            padding-top: 15px;
+        }
+
+        /* --- ACTIONS --- */
+        .action-btns {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .btn {
+            border: none;
+            padding: 14px 5px;
+            border-radius: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            font-size: 0.85rem;
+        }
+
+        .btn-gold {
+            background: var(--accent-gold);
+            color: #000;
+        }
+
+        .btn-white {
+            background: white;
+            color: #000;
+        }
+
+        .btn-share {
+            background: #25d366;
+            color: white;
+        }
+
+        /* --- CROP MODAL --- */
+        .crop-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            padding: 20px;
+        }
+
+        .crop-content {
+            background: #222;
+            padding: 20px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .crop-area {
+            width: 100%;
+            height: 350px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="stars"></canvas>
+
+    <div id="cropModal" class="crop-modal">
+        <div class="crop-content">
+            <h3 style="margin-bottom:15px; color: gold;">توسيط الصورة</h3>
+            <div class="crop-area"><img id="imageToCrop"></div>
+            <div style="display:flex; gap:10px;">
+                <button id="btnCancelCrop" class="btn btn-white" style="flex:1">إلغاء</button>
+                <button id="btnFinalCrop" class="btn btn-gold" style="flex:2">اعتمد</button>
+            </div>
+        </div>
+    </div>
+
+    <main class="container">
+        <h1>صانع بطاقات العيد 🌙</h1>
+
+        <section class="editor-box">
+            <div class="slider-wrapper">
+                <button class="nav-btn" onclick="slide('right')"><i class="fas fa-chevron-right"></i></button>
+                <div class="bg-selector" id="bgSlider">
+                    <div class="bg-option active" data-bg="gradient" style="background: var(--royal-gradient)"></div>
+                    <div class="bg-option" data-bg="./1.jpg" style="background-image:url('./1.jpg')"></div>
+                    <div class="bg-option" data-bg="./2.jpg" style="background-image:url('./2.jpg')"></div>
+                    <div class="bg-option" data-bg="./3.png" style="background-image:url('./3.png')"></div>
+                    <div class="bg-option" data-bg="./4.jpg" style="background-image:url('./4.jpg')"></div>
+                    <div class="bg-option" data-bg="./5.jpg" style="background-image:url('./5.jpg')"></div>
+                </div>
+                <button class="nav-btn" onclick="slide('left')"><i class="fas fa-chevron-left"></i></button>
+            </div>
+
+            <input type="text" id="inputToName" placeholder="إلى: (مثلاً: عائلتي الغالية)">
+            <textarea id="inputGreeting" placeholder="اكتب تهنئتك هنا..." rows="2"></textarea>
+            <input type="text" id="inputSenderName" placeholder="من: (اسمك)">
+
+            <label class="upload-btn">
+                <i class="fa-solid fa-camera"></i> أضف صورتك الشخصية
+                <input type="file" id="photoUpload" hidden accept="image/*">
+            </label>
+        </section>
+
+        <article class="preview-area" id="previewContainer">
+            <div id="scaleWrapper" class="scale-wrapper">
+                <div id="card" class="card">
+                    <div id="photoFrame" class="photo-frame">
+                        <img id="finalPhotoDisplay" class="user-photo-final">
+                    </div>
+                    <div class="text-content-wrapper">
+                        <div id="displayGreetingText" class="generated-greeting"></div>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <section class="action-btns">
+            <button class="btn btn-gold" onclick="exportImage(1.5)">HD</button>
+            <button class="btn btn-white" onclick="exportImage(3)">4K</button>
+            <button class="btn btn-share" onclick="shareCard()">
+                <i class="fa-solid fa-share-nodes"></i> مشاركة
+            </button>
+        </section>
+    </main>
+
+    <script>
+        const defaultMsg = "عيدكم مبارك، وكل عام وأنتم بخير وسعادة.";
+        let cropper;
+
+        function updateUI() {
+            const to = document.getElementById('inputToName').value || "أحبائي";
+            const msg = document.getElementById('inputGreeting').value || defaultMsg;
+            const from = document.getElementById('inputSenderName').value || "محبكم";
+            document.getElementById('displayGreetingText').innerHTML = `
+                <span class="highlight-gold">${to}</span><br>${msg}
+                <div class="sender-block">من: <span class="highlight-gold">${from}</span></div>`;
+            resizePreview();
+        }
+
+        // Slider Navigation
+        function slide(direction) {
+            const s = document.getElementById('bgSlider');
+            const amt = 150;
+            s.scrollBy({ left: direction === 'left' ? -amt : amt, behavior: 'smooth' });
+        }
+
+        // Background Selection
+        document.querySelectorAll('.bg-option').forEach(opt => {
+            opt.addEventListener('click', function () {
+                document.querySelector('.bg-option.active').classList.remove('active');
+                this.classList.add('active');
+                const card = document.getElementById('card');
+                card.style.backgroundImage = this.dataset.bg === 'gradient' ?
+                    'var(--royal-gradient)' : `url('${this.dataset.bg}')`;
+            });
+        });
+
+        // Photo Upload & Crop
+        document.getElementById('photoUpload').addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    document.getElementById('imageToCrop').src = ev.target.result;
+                    document.getElementById('cropModal').style.display = 'flex';
+                    if (cropper) cropper.destroy();
+                    cropper = new Cropper(document.getElementById('imageToCrop'), {
+                        aspectRatio: 0.85, // Perfect for the Arch Frame
+                        viewMode: 1,
+                        autoCropArea: 1
+                    });
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.getElementById('btnFinalCrop').addEventListener('click', () => {
+            const canvas = cropper.getCroppedCanvas({ width: 800, height: 950 });
+            document.getElementById('finalPhotoDisplay').src = canvas.toDataURL();
+            document.getElementById('photoFrame').style.display = 'block';
+            document.getElementById('cropModal').style.display = 'none';
+        });
+
+        document.getElementById('btnCancelCrop').addEventListener('click', () => {
+            document.getElementById('cropModal').style.display = 'none';
+        });
+
+        function resizePreview() {
+            const container = document.getElementById('previewContainer');
+            const scale = container.offsetWidth / 1080;
+            document.getElementById('scaleWrapper').style.transform = `scale(${scale})`;
+        }
+
+        async function exportImage(q) {
+            const btn = event.target;
+            const originalText = btn.innerText;
+            btn.innerText = "جاري الحفظ...";
+
+            const canvas = await html2canvas(document.getElementById('card'), {
+                scale: q, useCORS: true, width: 1080, height: 1350
+            });
+            const link = document.createElement('a');
+            link.download = `Eid_Card_${Date.now()}.png`;
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+            btn.innerText = originalText;
+        }
+
+        async function shareCard() {
+            const canvas = await html2canvas(document.getElementById('card'), { scale: 2, useCORS: true });
+            canvas.toBlob(async (blob) => {
+                const file = new File([blob], "Eid.png", { type: "image/png" });
+                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                    await navigator.share({ files: [file], title: 'تهنئة العيد' });
+                } else { alert("حمل الصورة أولاً ثم شاركها يدوياً"); }
+            });
+        }
+
+        ['inputToName', 'inputGreeting', 'inputSenderName'].forEach(id => {
+            document.getElementById(id).addEventListener('input', updateUI);
+        });
+
+        window.addEventListener('resize', resizePreview);
+        window.addEventListener('load', () => { updateUI(); resizePreview(); });
+
+        // Stars Background Animation
+        const sCanvas = document.getElementById('stars');
+        const sctx = sCanvas.getContext('2d');
+        let stars = [];
+        function initStars() {
+            sCanvas.width = window.innerWidth; sCanvas.height = window.innerHeight;
+            stars = Array.from({ length: 60 }, () => ({
+                x: Math.random() * sCanvas.width, y: Math.random() * sCanvas.height,
+                s: Math.random() * 2, sp: 0.02 + Math.random() * 0.05
+            }));
+        }
+        function drawStars() {
+            sctx.clearRect(0, 0, sCanvas.width, sCanvas.height);
+            stars.forEach(s => {
+                let o = (Math.sin(Date.now() * s.sp * 0.01) + 1) / 2;
+                sctx.fillStyle = `rgba(255,215,0,${o})`;
+                sctx.beginPath(); sctx.arc(s.x, s.y, s.s, 0, Math.PI * 2); sctx.fill();
+            });
+            requestAnimationFrame(drawStars);
+        }
+        initStars(); drawStars();
+    </script>
+</body>
+
+</html>
