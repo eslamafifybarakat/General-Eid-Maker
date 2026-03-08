@@ -4,44 +4,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>صانع بطاقات العيد | الإصدار الكامل</title>
 
-    <title>صانع بطاقات العيد | تصميم 4K واحترافي</title>
-    <meta name="description" content="صمم بطاقة تهنئة عيد الفطر الخاصة بك بجودة 4K بتصميم ملكي.">
-
+    <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+    <!-- Cropper JS (core) + html2canvas (defer) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
 
     <style>
-        :root {
-            --primary-blue: #040d21;
-            --accent-gold: #ffd700;
-            --card-width: 1080px;
-            --card-height: 1350px;
-            --royal-gradient: linear-gradient(135deg, #0f1c3f 0%, #081b4b 50%, #1a3ea7 100%);
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
+            transition: background-color 0.25s ease, border-color 0.2s ease, box-shadow 0.2s;
+        }
+
+        /* 🌟 LIGHT THEME (default) */
+        :root {
+            --bg-page: #f8f4eb;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(180, 150, 100, 0.3);
+            --text-primary: #2d2a24;
+            --text-soft: #6b4f3c;
+            --accent-gold: #b8860b;
+            --soft-gold: #e3c994;
+            --btn-hd: linear-gradient(135deg, #a48144 0%, #c9a459 100%);
+            --btn-4k: linear-gradient(135deg, #b37b48 0%, #e0b87b 100%);
+            --btn-share: linear-gradient(135deg, #1f7a5a 0%, #2e9c77 100%);
+            --card-bg-gradient: linear-gradient(135deg, #f9efd7 0%, #f3e1c0 100%);
+            --input-bg: rgba(255, 250, 240, 0.7);
+            --modal-bg: #f0e7d6;
+            --star-color: #b8860b;
+            --shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        /* 🌙 DARK THEME */
+        body.dark {
+            --bg-page: #0c0f1a;
+            --glass-bg: rgba(25, 30, 45, 0.7);
+            --glass-border: rgba(212, 175, 55, 0.25);
+            --text-primary: #f0e9dd;
+            --text-soft: #c9b696;
+            --accent-gold: #e4b138;
+            --soft-gold: #7e6b42;
+            --btn-hd: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            --btn-4k: linear-gradient(135deg, #b8860b 0%, #e6b422 100%);
+            --btn-share: linear-gradient(135deg, #0f5e4b 0%, #149e75 100%);
+            --card-bg-gradient: linear-gradient(135deg, #1a1f2e 0%, #262d42 100%);
+            --input-bg: rgba(20, 25, 40, 0.8);
+            --modal-bg: #242b3a;
+            --star-color: #dbb05c;
+            --shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
         }
 
         body {
             font-family: 'Tajawal', sans-serif;
-            background-color: var(--primary-blue);
-            color: white;
+            background-color: var(--bg-page);
+            color: var(--text-primary);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 10px;
+            padding: 15px;
             overflow-x: hidden;
         }
 
@@ -49,271 +80,369 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
             z-index: -1;
             pointer-events: none;
+            opacity: 0.7;
         }
 
         .container {
-            z-index: 2;
+            z-index: 5;
             width: 100%;
             max-width: 500px;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 18px;
+        }
+
+        /* Header with toggle */
+        .header-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            padding: 8px 15px 8px 8px;
+            border: 1px solid var(--glass-border);
         }
 
         h1 {
-            text-align: center;
-            font-size: 1.4rem;
-            color: var(--accent-gold);
-            margin: 10px 0;
-            text-shadow: 0 2px 10px rgba(255, 215, 0, 0.3);
+            font-weight: 800;
+            font-size: 1.5rem;
+            background: linear-gradient(to left, #b8860b, #84613a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
         }
 
-        /* --- SLIDER WITH ARROWS --- */
-        .slider-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            padding: 5px;
-        }
-
-        .bg-selector {
-            display: flex;
-            flex-wrap: nowrap;
-            overflow-x: auto;
-            gap: 12px;
-            padding: 10px;
-            scroll-behavior: smooth;
-            scrollbar-width: none;
-        }
-
-        .bg-selector::-webkit-scrollbar {
-            display: none;
-        }
-
-        .nav-btn {
-            background: var(--accent-gold);
-            border: none;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            cursor: pointer;
+        .theme-toggle {
+            background: var(--input-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 40px;
+            width: 50px;
+            height: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #000;
-            flex-shrink: 0;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-        }
-
-        .bg-option {
-            flex: 0 0 65px;
-            height: 65px;
-            border-radius: 12px;
+            font-size: 1.8rem;
             cursor: pointer;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            background-size: cover;
-            background-position: center;
-            transition: 0.3s ease;
+            color: var(--accent-gold);
+            box-shadow: var(--shadow);
+            transition: 0.2s;
         }
 
-        .bg-option.active {
-            border-color: var(--accent-gold);
-            transform: scale(1.1);
-            box-shadow: 0 0 15px var(--accent-gold);
-        }
-
-        /* --- EDITOR --- */
         .editor-box {
-            background: rgba(255, 255, 255, 0.08);
-            padding: 15px;
-            border-radius: 20px;
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            padding: 20px;
+            border-radius: 28px;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow);
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 16px;
+        }
+
+        .section-label {
+            font-size: 0.85rem;
+            color: var(--text-soft);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: -5px;
+            letter-spacing: 0.3px;
         }
 
         input,
         textarea {
-            padding: 12px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: var(--input-bg);
+            border: 1px solid var(--glass-border);
+            padding: 14px;
+            border-radius: 18px;
+            color: var(--text-primary);
             font-family: 'Tajawal';
-            background: white;
-            color: #333;
             width: 100%;
+            font-size: 0.95rem;
+            backdrop-filter: blur(5px);
         }
 
-        .upload-btn {
-            background: linear-gradient(45deg, #1b3ea7, #2a52be);
-            color: white;
-            padding: 12px;
-            text-align: center;
-            border-radius: 12px;
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+            background: var(--glass-bg);
+        }
+
+        .slider-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .bg-selector,
+        .shape-selector {
+            display: flex;
+            overflow-x: auto;
+            gap: 10px;
+            padding: 5px 2px;
+            scrollbar-width: none;
+            flex: 1;
+        }
+
+        .bg-selector::-webkit-scrollbar,
+        .shape-selector::-webkit-scrollbar {
+            display: none;
+        }
+
+        .bg-option,
+        .bg-add-btn,
+        .shape-option {
+            flex: 0 0 55px;
+            height: 55px;
+            border-radius: 16px;
             cursor: pointer;
-            font-weight: bold;
+            border: 2px solid transparent;
+            background-size: cover;
+            background-position: center;
+            transition: 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            border: 1px solid var(--accent-gold);
+            background-color: var(--input-bg);
+            color: var(--text-primary);
+            font-size: 1.4rem;
         }
 
-        /* --- PREVIEW & NEW PHOTO FRAME --- */
+        .active {
+            border-color: var(--accent-gold) !important;
+            box-shadow: 0 0 12px var(--accent-gold);
+            transform: scale(1.02);
+        }
+
+        .nav-btn {
+            background: var(--glass-border);
+            border: none;
+            color: var(--text-primary);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 0.8rem;
+            backdrop-filter: blur(5px);
+        }
+
         .preview-area {
             width: 100%;
             aspect-ratio: 1080 / 1350;
             position: relative;
             overflow: hidden;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            border-radius: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--glass-border);
         }
 
         .scale-wrapper {
             position: absolute;
             top: 0;
             left: 0;
-            width: var(--card-width);
-            height: var(--card-height);
+            width: 1080px;
+            height: 1350px;
             transform-origin: top left;
         }
 
         .card {
             width: 100%;
             height: 100%;
-            background-image: var(--royal-gradient);
+            background: var(--card-bg-gradient);
             background-size: cover;
             background-position: center;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding-top: 80px;
+            padding-top: 100px;
         }
 
-        /* THE MODERN ARCH FRAME */
         .photo-frame {
-            width: 520px;
-            height: 620px;
-            background: white;
+            width: 580px;
+            height: 600px;
+            background: rgba(255, 250, 240, 0.25);
+            backdrop-filter: blur(6px);
             padding: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            /* border: 2px solid var(--accent-gold);  <-- REMOVED per request */
             display: none;
-            position: relative;
-            /* Modern Islamic Arch Shape */
-            clip-path: polygon(50% 0%, 100% 20%, 100% 100%, 0 100%, 0 20%);
-            filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.5));
-            border-bottom: 12px solid var(--accent-gold);
+            /* hidden until photo */
+        }
+
+        /* shapes attached via class */
+        .shape-arch {
+            clip-path: polygon(0 100%, 0 20%, 50% 0, 100% 20%, 100% 100%);
+        }
+
+        .shape-circle {
+            border-radius: 50%;
+            clip-path: circle(50%);
+        }
+
+        .shape-star {
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 75%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+        }
+
+        .shape-islamic {
+            clip-path: polygon(50% 0%, 61% 12%, 80% 10%, 88% 28%, 100% 35%, 95% 53%, 100% 70%, 85% 82%, 75% 100%, 50% 90%, 25% 100%, 15% 82%, 0% 70%, 5% 53%, 0% 35%, 12% 28%, 20% 10%, 39% 12%);
+        }
+
+        .shape-heart {
+            clip-path: polygon(50% 0%, 93% 35%, 80% 100%, 50% 80%, 20% 100%, 7% 35%);
+        }
+
+        .shape-diamond {
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+        }
+
+        .shape-pentagon {
+            clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
+        }
+
+        .shape-hexagon {
+            clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+        }
+
+        .shape-octagon {
+            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+        }
+
+        .shape-leaf {
+            clip-path: polygon(50% 0%, 80% 20%, 100% 50%, 80% 80%, 50% 100%, 20% 80%, 0% 50%, 20% 20%);
         }
 
         .user-photo-final {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            clip-path: polygon(50% 0%, 100% 20%, 100% 100%, 0 100%, 0 20%);
+        }
+
+        .greeting-line {
+            font-size: 38px;
+            line-height: 1.6;
+            margin: 6px 0;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .greeting-line:first-child {
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--accent-gold);
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
         }
 
         .text-content-wrapper {
             position: absolute;
-            bottom: 80px;
+            bottom: 100px;
             width: 100%;
             padding: 0 60px;
-            text-align: center;
         }
 
         .generated-greeting {
-            font-size: 42px;
-            line-height: 1.6;
-            color: #fff;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 50px;
-            border-radius: 40px;
-            backdrop-filter: blur(10px);
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            padding: 40px 30px;
+            border-radius: 50px;
             border: 2px solid var(--accent-gold);
+            text-align: center;
+            color: var(--text-primary);
+            font-size: 38px;
+            line-height: 1.6;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
         }
 
         .highlight-gold {
             color: var(--accent-gold);
             font-weight: 800;
+            display: block;
+            margin-bottom: 10px;
+            font-size: 48px;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
         }
 
         .sender-block {
-            font-size: 34px;
-            margin-top: 25px;
-            border-top: 2px solid var(--accent-gold);
+            margin-top: 20px;
             padding-top: 15px;
+            border-top: 1px solid var(--accent-gold);
+            font-size: 30px;
+            font-weight: 500;
+            opacity: 0.9;
         }
 
-        /* --- ACTIONS --- */
         .action-btns {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
-            gap: 10px;
-            margin: 15px 0;
+            gap: 12px;
+            margin-top: 5px;
         }
 
         .btn {
             border: none;
-            padding: 14px 5px;
-            border-radius: 12px;
-            font-weight: 800;
+            padding: 16px 5px;
+            border-radius: 20px;
+            font-weight: 700;
             cursor: pointer;
-            transition: 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 5px;
-            font-size: 0.85rem;
+            gap: 8px;
+            color: white;
+            transition: 0.2s;
+            font-size: 0.9rem;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
         }
 
-        .btn-gold {
-            background: var(--accent-gold);
-            color: #000;
+        .btn-hd {
+            background: var(--btn-hd);
         }
 
-        .btn-white {
-            background: white;
-            color: #000;
+        .btn-4k {
+            background: var(--btn-4k);
         }
 
         .btn-share {
-            background: #25d366;
-            color: white;
+            background: var(--btn-share);
         }
 
-        /* --- CROP MODAL --- */
+        .btn:active {
+            transform: scale(0.96);
+        }
+
+        /* crop modal */
         .crop-modal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
             display: none;
             justify-content: center;
             align-items: center;
-            z-index: 9999;
-            padding: 20px;
+            z-index: 10000;
+            padding: 15px;
         }
 
         .crop-content {
-            background: #222;
+            background: var(--modal-bg);
             padding: 20px;
-            border-radius: 20px;
+            border-radius: 32px;
             width: 100%;
-            max-width: 400px;
-            text-align: center;
+            max-width: 420px;
+            border: 2px solid var(--accent-gold);
         }
 
-        .crop-area {
-            width: 100%;
-            height: 350px;
-            margin-bottom: 20px;
+        #imageToCrop {
+            max-width: 100%;
+            max-height: 280px;
         }
     </style>
 </head>
@@ -321,49 +450,101 @@
 <body>
     <canvas id="stars"></canvas>
 
+    <!-- CROP MODAL -->
     <div id="cropModal" class="crop-modal">
         <div class="crop-content">
-            <h3 style="margin-bottom:15px; color: gold;">توسيط الصورة</h3>
-            <div class="crop-area"><img id="imageToCrop"></div>
-            <div style="display:flex; gap:10px;">
-                <button id="btnCancelCrop" class="btn btn-white" style="flex:1">إلغاء</button>
-                <button id="btnFinalCrop" class="btn btn-gold" style="flex:2">اعتمد</button>
+            <h3 style="margin-bottom:20px; color:var(--accent-gold); text-align:center;">✂️ قص الصورة</h3>
+            <div style="max-height:280px; overflow:hidden; border-radius:20px; background:#000; margin-bottom:20px;">
+                <img id="imageToCrop" style="width:100%;">
+            </div>
+            <div style="display:flex; gap:12px;">
+                <button id="btnCancelCrop" class="btn" style="background:#5f5f5f; flex:1;">إلغاء</button>
+                <button id="btnFinalCrop" class="btn btn-4k" style="flex:2;">تطبيق</button>
             </div>
         </div>
     </div>
 
     <main class="container">
-        <h1>صانع بطاقات العيد 🌙</h1>
+        <!-- Header with toggle -->
+        <div class="header-row">
+            <h1>🌙 صانع البطاقات</h1>
+            <div class="theme-toggle" id="themeToggleBtn" title="تبديل الوضع الليلي/النهاري">
+                <i class="fa-regular fa-sun" id="themeIcon"></i>
+            </div>
+        </div>
 
         <section class="editor-box">
+            <div class="section-label"><i class="fas fa-palette"></i> خلفية البطاقة</div>
             <div class="slider-wrapper">
-                <button class="nav-btn" onclick="slide('right')"><i class="fas fa-chevron-right"></i></button>
+                <button class="nav-btn" onclick="slideSlider('bgSlider', 100)"><i
+                        class="fas fa-chevron-right"></i></button>
                 <div class="bg-selector" id="bgSlider">
-                    <div class="bg-option active" data-bg="gradient" style="background: var(--royal-gradient)"></div>
-                    <div class="bg-option" data-bg="./1.jpg" style="background-image:url('./1.jpg')"></div>
+                    <!-- زر رفع خلفية خاصة -->
+                    <label class="bg-add-btn" title="رفع خلفية خاصة">
+                        <i class="fas fa-plus"></i>
+                        <input type="file" id="bgUpload" hidden accept="image/*">
+                    </label>
+                    <!-- الخلفيات المطلوبة بالضبط (مع بيانات وهمية ./1.jpg الخ) -->
+                    <div class="bg-option active" data-bg="./1.jpg" style="background-image:url('./1.jpg')"></div>
                     <div class="bg-option" data-bg="./2.jpg" style="background-image:url('./2.jpg')"></div>
                     <div class="bg-option" data-bg="./3.png" style="background-image:url('./3.png')"></div>
                     <div class="bg-option" data-bg="./4.jpg" style="background-image:url('./4.jpg')"></div>
                     <div class="bg-option" data-bg="./5.jpg" style="background-image:url('./5.jpg')"></div>
+                    <div class="bg-option" data-bg="./6.jpg" style="background-image:url('./6.jpg')"></div>
+                    <div class="bg-option" data-bg="./7.jpg" style="background-image:url('./7.jpg')"></div>
+                    <div class="bg-option" data-bg="./8.jpg" style="background-image:url('./8.jpg')"></div>
+                    <!-- نضيف خيار gradient كخيار إضافي (اختياري) -->
+                    <div class="bg-option" data-bg="gradient"
+                        style="background: linear-gradient(135deg, #f3e5c9 0%, #ecdbbc 100%);" title="تدرج ذهبي"></div>
                 </div>
-                <button class="nav-btn" onclick="slide('left')"><i class="fas fa-chevron-left"></i></button>
+                <button class="nav-btn" onclick="slideSlider('bgSlider', -100)"><i
+                        class="fas fa-chevron-left"></i></button>
             </div>
 
-            <input type="text" id="inputToName" placeholder="إلى: (مثلاً: عائلتي الغالية)">
-            <textarea id="inputGreeting" placeholder="اكتب تهنئتك هنا..." rows="2"></textarea>
-            <input type="text" id="inputSenderName" placeholder="من: (اسمك)">
+            <div class="section-label"><i class="fas fa-pen-nib"></i> نص التهنئة</div>
+            <input type="text" id="inputToName" placeholder="إلى: (مثلاً: أمي الحبيبة)">
+            <textarea id="inputGreeting" placeholder="نص التهنئة..." rows="2">
+عيد فطر مبارك
+كل عام وأنتم بخير
+تقبل الله طاعتكم
+وجعل أيامكم فرحًا وسعادة
+أعاده الله عليكم بالخير واليمن والبركات
+            </textarea>
+            <input type="text" id="inputSenderName" placeholder="(اسمك)">
 
-            <label class="upload-btn">
-                <i class="fa-solid fa-camera"></i> أضف صورتك الشخصية
+            <div class="section-label"><i class="fas fa-shapes"></i> شكل الإطار</div>
+            <div class="slider-wrapper">
+                <button class="nav-btn" onclick="slideSlider('shapeSlider', 100)"><i
+                        class="fas fa-chevron-right"></i></button>
+                <div class="shape-selector" id="shapeSlider">
+                    <div class="shape-option active" data-shape="shape-arch"><i class="fas fa-archway"></i></div>
+                    <div class="shape-option" data-shape="shape-circle"><i class="far fa-circle"></i></div>
+                    <div class="shape-option" data-shape="shape-star"><i class="fas fa-star"></i></div>
+                    <div class="shape-option" data-shape="shape-islamic"><i class="fas fa-star-and-crescent"></i></div>
+                    <div class="shape-option" data-shape="shape-heart"><i class="fas fa-heart"></i></div>
+                    <div class="shape-option" data-shape="shape-diamond"><i class="fas fa-gem"></i></div>
+                    <div class="shape-option" data-shape="shape-pentagon"><i class="fas fa-shield-halved"></i></div>
+                    <div class="shape-option" data-shape="shape-hexagon"><i class="fas fa-draw-polygon"></i></div>
+                    <div class="shape-option" data-shape="shape-octagon"><i class="fas fa-certificate"></i></div>
+                    <div class="shape-option" data-shape="shape-leaf"><i class="fas fa-leaf"></i></div>
+                </div>
+                <button class="nav-btn" onclick="slideSlider('shapeSlider', -100)"><i
+                        class="fas fa-chevron-left"></i></button>
+            </div>
+
+            <label class="btn btn-hd" style="width:100%; cursor:pointer;">
+                <i class="fa-solid fa-camera-retro"></i> رفع الصورة الشخصية
                 <input type="file" id="photoUpload" hidden accept="image/*">
             </label>
         </section>
 
+        <!-- preview card -->
         <article class="preview-area" id="previewContainer">
             <div id="scaleWrapper" class="scale-wrapper">
                 <div id="card" class="card">
-                    <div id="photoFrame" class="photo-frame">
-                        <img id="finalPhotoDisplay" class="user-photo-final">
+                    <div id="photoFrame" class="photo-frame shape-arch">
+                        <img id="finalPhotoDisplay" class="user-photo-final"
+                            src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23d4af37' opacity='0.2'/%3E%3C/svg%3E">
                     </div>
                     <div class="text-content-wrapper">
                         <div id="displayGreetingText" class="generated-greeting"></div>
@@ -373,135 +554,241 @@
         </article>
 
         <section class="action-btns">
-            <button class="btn btn-gold" onclick="exportImage(1.5)">HD</button>
-            <button class="btn btn-white" onclick="exportImage(3)">4K</button>
-            <button class="btn btn-share" onclick="shareCard()">
-                <i class="fa-solid fa-share-nodes"></i> مشاركة
-            </button>
+            <button class="btn btn-hd" onclick="exportImage(1.5)"><i class="fa-solid fa-download"></i> HD</button>
+            <button class="btn btn-4k" onclick="exportImage(3)"><i class="fa-solid fa-download"></i> 4K</button>
+            <button class="btn btn-share" onclick="shareCard()"><i class="fa-solid fa-share-nodes"></i></button>
         </section>
     </main>
 
     <script>
-        const defaultMsg = "عيدكم مبارك، وكل عام وأنتم بخير وسعادة.";
-        let cropper;
+        (function () {
+            // ---------- CONSTANTS & STATE ----------
+            const defaultMsg = `عيد فطر مبارك
+كل عام وأنتم بخير
+تقبل الله طاعتكم
+وجعل أيامكم فرحًا وسعادة
+أعاده الله عليكم بالخير واليمن والبركات`;
+            let cropper = null;
 
-        function updateUI() {
-            const to = document.getElementById('inputToName').value || "أحبائي";
-            const msg = document.getElementById('inputGreeting').value || defaultMsg;
-            const from = document.getElementById('inputSenderName').value || "محبكم";
-            document.getElementById('displayGreetingText').innerHTML = `
-                <span class="highlight-gold">${to}</span><br>${msg}
-                <div class="sender-block">من: <span class="highlight-gold">${from}</span></div>`;
-            resizePreview();
-        }
+            // UI Elements
+            const toInput = document.getElementById('inputToName');
+            const msgInput = document.getElementById('inputGreeting');
+            const fromInput = document.getElementById('inputSenderName');
+            const displayDiv = document.getElementById('displayGreetingText');
+            const photoFrame = document.getElementById('photoFrame');
+            const finalPhoto = document.getElementById('finalPhotoDisplay');
+            const cardDiv = document.getElementById('card');
+            const bgUpload = document.getElementById('bgUpload');
+            const photoUpload = document.getElementById('photoUpload');
+            const cropModal = document.getElementById('cropModal');
+            const imageToCrop = document.getElementById('imageToCrop');
+            const themeToggle = document.getElementById('themeToggleBtn');
+            const themeIcon = document.getElementById('themeIcon');
+            const body = document.body;
 
-        // Slider Navigation
-        function slide(direction) {
-            const s = document.getElementById('bgSlider');
-            const amt = 150;
-            s.scrollBy({ left: direction === 'left' ? -amt : amt, behavior: 'smooth' });
-        }
+            // ---------- THEME TOGGLE ----------
+            function setTheme(theme) {
+                if (theme === 'dark') {
+                    body.classList.add('dark');
+                    themeIcon.className = 'fa-regular fa-moon';
+                } else {
+                    body.classList.remove('dark');
+                    themeIcon.className = 'fa-regular fa-sun';
+                }
+                initStars(); drawStars(); // redraw stars with new color
+            }
 
-        // Background Selection
-        document.querySelectorAll('.bg-option').forEach(opt => {
-            opt.addEventListener('click', function () {
-                document.querySelector('.bg-option.active').classList.remove('active');
-                this.classList.add('active');
-                const card = document.getElementById('card');
-                card.style.backgroundImage = this.dataset.bg === 'gradient' ?
-                    'var(--royal-gradient)' : `url('${this.dataset.bg}')`;
+            themeToggle.addEventListener('click', () => {
+                if (body.classList.contains('dark')) {
+                    setTheme('light');
+                } else {
+                    setTheme('dark');
+                }
             });
-        });
 
-        // Photo Upload & Crop
-        document.getElementById('photoUpload').addEventListener('change', function (e) {
-            const file = e.target.files[0];
-            if (file) {
+            // ---------- CARD TEXT UPDATE ----------
+            function updateUI() {
+                const to = toInput.value.trim() || "";
+                const msg = msgInput.value.trim() || defaultMsg;
+                const from = fromInput.value.trim() || "";
+
+                const toHtml = to ? `<span class="highlight-gold">${to}</span>` : "";
+                const senderHtml = from ? `<div class="sender-block">من: ${from}</div>` : "";
+
+                // قسم الرسالة إلى أسطر
+                const msgLines = (msgInput.value.trim() || defaultMsg)
+                    .split('\n')
+                    .map(line => `<div class="greeting-line">${line.trim()}</div>`)
+                    .join('');
+
+                displayDiv.innerHTML = `${toHtml}${msgLines}${senderHtml}`;
+
+                resizePreview();
+            }
+
+            // ---------- SLIDER SCROLL ----------
+            window.slideSlider = (id, amt) => {
+                document.getElementById(id).scrollBy({ left: amt, behavior: 'smooth' });
+            };
+
+            // ---------- SHAPE SELECTION ----------
+            document.querySelectorAll('.shape-option').forEach(opt => {
+                opt.addEventListener('click', function () {
+                    document.querySelector('.shape-option.active')?.classList.remove('active');
+                    this.classList.add('active');
+                    const shape = this.dataset.shape;
+                    photoFrame.className = `photo-frame ${shape}`;
+                });
+            });
+
+            // ---------- BACKGROUND SELECTION (ملفات محلية) ----------
+            document.querySelectorAll('.bg-option').forEach(opt => {
+                opt.addEventListener('click', function () {
+                    document.querySelector('.bg-option.active')?.classList.remove('active');
+                    this.classList.add('active');
+                    const bg = this.dataset.bg; // could be "./1.jpg" or "gradient"
+                    if (bg === 'gradient') {
+                        cardDiv.style.backgroundImage = 'var(--card-bg-gradient)';
+                    } else {
+                        // نعاملها كـ url صورة (ملف محلي)
+                        cardDiv.style.backgroundImage = `url('${bg}')`;
+                    }
+                });
+            });
+
+            // ---------- CUSTOM BG UPLOAD ----------
+            bgUpload.addEventListener('change', function (e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const url = URL.createObjectURL(file);
+                    cardDiv.style.backgroundImage = `url(${url})`;
+                    // remove active class from gradient
+                    document.querySelector('.bg-option.active')?.classList.remove('active');
+                }
+            });
+
+            // ---------- PHOTO UPLOAD + CROP ----------
+            photoUpload.addEventListener('change', function (e) {
+                const file = e.target.files[0];
+                if (!file) return;
                 const reader = new FileReader();
                 reader.onload = (ev) => {
-                    document.getElementById('imageToCrop').src = ev.target.result;
-                    document.getElementById('cropModal').style.display = 'flex';
+                    imageToCrop.src = ev.target.result;
+                    cropModal.style.display = 'flex';
                     if (cropper) cropper.destroy();
-                    cropper = new Cropper(document.getElementById('imageToCrop'), {
-                        aspectRatio: 0.85, // Perfect for the Arch Frame
+                    cropper = new Cropper(imageToCrop, {
+                        aspectRatio: 1,
                         viewMode: 1,
-                        autoCropArea: 1
+                        background: false,
+                        modal: true,
                     });
                 };
                 reader.readAsDataURL(file);
+            });
+
+            document.getElementById('btnFinalCrop').addEventListener('click', () => {
+                if (!cropper) return;
+                const canvas = cropper.getCroppedCanvas({ width: 800, height: 800 });
+                finalPhoto.src = canvas.toDataURL('image/png');
+                photoFrame.style.display = 'block';  // show frame
+                cropModal.style.display = 'none';
+            });
+
+            document.getElementById('btnCancelCrop').addEventListener('click', () => {
+                cropModal.style.display = 'none';
+            });
+
+            // ---------- RESIZE PREVIEW ----------
+            function resizePreview() {
+                const container = document.getElementById('previewContainer');
+                if (!container) return;
+                const scale = container.offsetWidth / 1080;
+                document.getElementById('scaleWrapper').style.transform = `scale(${scale})`;
             }
-        });
 
-        document.getElementById('btnFinalCrop').addEventListener('click', () => {
-            const canvas = cropper.getCroppedCanvas({ width: 800, height: 950 });
-            document.getElementById('finalPhotoDisplay').src = canvas.toDataURL();
-            document.getElementById('photoFrame').style.display = 'block';
-            document.getElementById('cropModal').style.display = 'none';
-        });
+            // ---------- EXPORT IMAGE ----------
+            window.exportImage = async function (q) {
+                const btn = event.currentTarget;
+                const oldHtml = btn.innerHTML;
+                btn.innerHTML = '<i class="fa fa-spinner fa-pulse"></i>';
+                try {
+                    const card = document.getElementById('card');
+                    const canvas = await html2canvas(card, {
+                        scale: q,
+                        useCORS: true,
+                        width: 1080,
+                        height: 1350,
+                        backgroundColor: null,
+                        allowTaint: false,
+                    });
+                    const link = document.createElement('a');
+                    link.download = `Eid_card_${Date.now()}.png`;
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                } catch (err) { alert('حدث خطأ بالتصدير'); }
+                btn.innerHTML = oldHtml;
+            };
 
-        document.getElementById('btnCancelCrop').addEventListener('click', () => {
-            document.getElementById('cropModal').style.display = 'none';
-        });
+            // ---------- SHARE ----------
+            window.shareCard = async function () {
+                const card = document.getElementById('card');
+                const canvas = await html2canvas(card, { scale: 2, useCORS: true });
+                canvas.toBlob(async (blob) => {
+                    const file = new File([blob], 'eid_card.png', { type: 'image/png' });
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        await navigator.share({ files: [file], title: 'بطاقة العيد' });
+                    } else {
+                        alert('يمكنك تنزيل الصورة أولا ثم مشاركتها');
+                    }
+                });
+            };
 
-        function resizePreview() {
-            const container = document.getElementById('previewContainer');
-            const scale = container.offsetWidth / 1080;
-            document.getElementById('scaleWrapper').style.transform = `scale(${scale})`;
-        }
+            // ---------- STARS BACKGROUND ----------
+            const sCanvas = document.getElementById('stars');
+            const sctx = sCanvas.getContext('2d');
+            let stars = [];
 
-        async function exportImage(q) {
-            const btn = event.target;
-            const originalText = btn.innerText;
-            btn.innerText = "جاري الحفظ...";
+            function initStars() {
+                sCanvas.width = window.innerWidth;
+                sCanvas.height = window.innerHeight;
+                stars = Array.from({ length: 50 }, () => ({
+                    x: Math.random() * sCanvas.width,
+                    y: Math.random() * sCanvas.height,
+                    s: Math.random() * 2.5 + 1
+                }));
+            }
 
-            const canvas = await html2canvas(document.getElementById('card'), {
-                scale: q, useCORS: true, width: 1080, height: 1350
+            function drawStars() {
+                sctx.clearRect(0, 0, sCanvas.width, sCanvas.height);
+                const baseColor = body.classList.contains('dark') ? '#e4b138' : '#b8860b';
+                stars.forEach(s => {
+                    let opacity = (Math.sin(Date.now() * 0.002 + s.x) + 1) / 2 * 0.8;
+                    sctx.fillStyle = `rgba(${parseInt(baseColor.slice(1, 3), 16)}, ${parseInt(baseColor.slice(3, 5), 16)}, ${parseInt(baseColor.slice(5, 7), 16)}, ${opacity})`;
+                    sctx.beginPath();
+                    sctx.arc(s.x, s.y, s.s, 0, Math.PI * 2);
+                    sctx.fill();
+                });
+                requestAnimationFrame(drawStars);
+            }
+
+            window.addEventListener('resize', () => {
+                initStars();
+                resizePreview();
             });
-            const link = document.createElement('a');
-            link.download = `Eid_Card_${Date.now()}.png`;
-            link.href = canvas.toDataURL("image/png");
-            link.click();
-            btn.innerText = originalText;
-        }
 
-        async function shareCard() {
-            const canvas = await html2canvas(document.getElementById('card'), { scale: 2, useCORS: true });
-            canvas.toBlob(async (blob) => {
-                const file = new File([blob], "Eid.png", { type: "image/png" });
-                if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                    await navigator.share({ files: [file], title: 'تهنئة العيد' });
-                } else { alert("حمل الصورة أولاً ثم شاركها يدوياً"); }
+            // ---------- INIT ----------
+            [toInput, msgInput, fromInput].forEach(el => el.addEventListener('input', updateUI));
+            window.addEventListener('load', () => {
+                updateUI();
+                resizePreview();
+                initStars();
+                drawStars();
+                // Hide frame initially if no real photo
+                if (!finalPhoto.src || finalPhoto.src.includes('svg')) photoFrame.style.display = 'none';
             });
-        }
 
-        ['inputToName', 'inputGreeting', 'inputSenderName'].forEach(id => {
-            document.getElementById(id).addEventListener('input', updateUI);
-        });
-
-        window.addEventListener('resize', resizePreview);
-        window.addEventListener('load', () => { updateUI(); resizePreview(); });
-
-        // Stars Background Animation
-        const sCanvas = document.getElementById('stars');
-        const sctx = sCanvas.getContext('2d');
-        let stars = [];
-        function initStars() {
-            sCanvas.width = window.innerWidth; sCanvas.height = window.innerHeight;
-            stars = Array.from({ length: 60 }, () => ({
-                x: Math.random() * sCanvas.width, y: Math.random() * sCanvas.height,
-                s: Math.random() * 2, sp: 0.02 + Math.random() * 0.05
-            }));
-        }
-        function drawStars() {
-            sctx.clearRect(0, 0, sCanvas.width, sCanvas.height);
-            stars.forEach(s => {
-                let o = (Math.sin(Date.now() * s.sp * 0.01) + 1) / 2;
-                sctx.fillStyle = `rgba(255,215,0,${o})`;
-                sctx.beginPath(); sctx.arc(s.x, s.y, s.s, 0, Math.PI * 2); sctx.fill();
-            });
-            requestAnimationFrame(drawStars);
-        }
-        initStars(); drawStars();
+            finalPhoto.addEventListener('load', () => { if (finalPhoto.src && !finalPhoto.src.includes('svg')) photoFrame.style.display = 'block'; });
+        })();
     </script>
 </body>
 
