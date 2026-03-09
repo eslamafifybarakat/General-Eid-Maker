@@ -752,36 +752,72 @@
                 const btn = event.currentTarget;
                 const oldHtml = btn.innerHTML;
                 btn.innerHTML = '<i class="fa fa-spinner fa-pulse"></i>';
+
                 try {
                     const card = document.getElementById('card');
+
+                    // 1. Capture the canvas with specific dimensions
                     const canvas = await html2canvas(card, {
-                        scale: q,
+                        scale: q,             // q=1 for standard, q=2+ for sharper text
                         useCORS: true,
-                        width: 1080,
-                        height: 1350,
+                        width: 1080,          // Force source width
+                        height: 1350,         // Force source height
                         backgroundColor: null,
-                        allowTaint: false,
+                        logging: false,
+                        onclone: (clonedDoc) => {
+                            // 2. Ensure the cloned element isn't affected by CSS transforms/scaling
+                            const clonedCard = clonedDoc.getElementById('card');
+                            clonedCard.style.transform = "none";
+                            clonedCard.style.width = "1080px";
+                            clonedCard.style.height = "1350px";
+                        }
                     });
+
                     const link = document.createElement('a');
                     link.download = `Eid_card_${Date.now()}.png`;
                     link.href = canvas.toDataURL('image/png');
                     link.click();
-                } catch (err) { alert('حدث خطأ بالتصدير'); }
+                } catch (err) {
+                    console.error(err);
+                    alert('حدث خطأ بالتصدير');
+                }
                 btn.innerHTML = oldHtml;
             };
 
             // ---------- SHARE ----------
             window.shareCard = async function () {
                 const card = document.getElementById('card');
-                const canvas = await html2canvas(card, { scale: 2, useCORS: true });
-                canvas.toBlob(async (blob) => {
-                    const file = new File([blob], 'eid_card.png', { type: 'image/png' });
-                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                        await navigator.share({ files: [file], title: 'بطاقة العيد' });
-                    } else {
-                        alert('يمكنك تنزيل الصورة أولا ثم مشاركتها');
+
+                // We use a scale that ensures high quality for sharing
+                const canvas = await html2canvas(card, {
+                    width: 1080,
+                    height: 1350,
+                    scale: 2, // High DPI for mobile sharing
+                    useCORS: true,
+                    onclone: (clonedDoc) => {
+                        const clonedCard = clonedDoc.getElementById('card');
+                        clonedCard.style.transform = "none";
                     }
                 });
+
+                canvas.toBlob(async (blob) => {
+                    if (!blob) return;
+                    const file = new File([blob], 'eid_card.png', { type: 'image/png' });
+
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        try {
+                            await navigator.share({
+                                files: [file],
+                                title: 'بطاقة تهنئة العيد',
+                                text: 'كل عام وأنتم بخير'
+                            });
+                        } catch (err) {
+                            console.log("User cancelled sharing");
+                        }
+                    } else {
+                        alert('المتصفح لا يدعم المشاركة المباشرة، يرجى حفظ الصورة أولاً');
+                    }
+                }, 'image/png');
             };
 
             // ---------- STARS BACKGROUND ----------
