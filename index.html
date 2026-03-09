@@ -749,25 +749,44 @@
 
             // ---------- HELPER: INTERNAL CAPTURE ----------
             async function captureCard(multiplier) {
-                const card = document.getElementById('card');
-                const scaleWrapper = document.getElementById('scaleWrapper');
 
-                // 1. Save current mobile scale and reset to 1
+                const card = document.getElementById("card");
+                const scaleWrapper = document.getElementById("scaleWrapper");
+
+                // حفظ الـ transform الحالي
                 const originalTransform = scaleWrapper.style.transform;
+
+                // إزالة أي scale من المعاينة
                 scaleWrapper.style.transform = "scale(1)";
 
-                // 2. Perform capture
+                // تثبيت الأبعاد الحقيقية للبطاقة
+                const originalWidth = card.style.width;
+                const originalHeight = card.style.height;
+
+                card.style.width = "1080px";
+                card.style.height = "1350px";
+
                 const canvas = await html2canvas(card, {
-                    scale: multiplier,      // Controls quality (1.5 for HD, 3 for 4K)
-                    useCORS: true,          // Essential for external images/photos
+                    scale: multiplier,
+                    useCORS: true,
                     allowTaint: false,
-                    width: 1080,            // Force output width
-                    height: 1350,           // Force output height
                     backgroundColor: null,
-                    logging: false
+
+                    width: 1080,
+                    height: 1350,
+
+                    windowWidth: 1080,
+                    windowHeight: 1350,
+
+                    imageSmoothingEnabled: true,
+
+                    scrollX: 0,
+                    scrollY: 0
                 });
 
-                // 3. Restore the mobile view scale
+                // إعادة القيم الأصلية
+                card.style.width = originalWidth;
+                card.style.height = originalHeight;
                 scaleWrapper.style.transform = originalTransform;
 
                 return canvas;
