@@ -48,10 +48,19 @@
     <link rel="manifest" href="site.webmanifest">
 
     <!-- Fonts & Icons -->
+    <!-- RECT: أفضل خطوط عربية للبطاقات -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+    <!-- خطوط حديثة وعصرية للعناوين والنصوص -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Cairo:wght@400;500;600;700&family=Reem+Kufi&family=Amiri&display=swap"
+        rel="stylesheet">
+
+    <!-- أيقونات Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Cropper.js -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
 
     <!-- Cropper JS (core) + html2canvas (defer) -->
@@ -106,7 +115,9 @@
         }
 
         body {
-            font-family: 'Tajawal', sans-serif;
+            font-family: 'Tajawal', 'Cairo', 'Reem Kufi', sans-serif;
+            direction: rtl;
+
             background-color: var(--bg-page);
             color: var(--text-primary);
             min-height: 100vh;
@@ -147,10 +158,17 @@
             border: 1px solid var(--glass-border);
         }
 
+        * {
+            font-feature-settings: "liga" 1;
+            text-rendering: optimizeLegibility;
+        }
+
         h1 {
             font-weight: 800;
             font-size: 1.5rem;
-            background: linear-gradient(to left, #b8860b, #84613a);
+            background: linear-gradient(to left,
+                    var(--accent-gold),
+                    var(--soft-gold));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin: 0;
@@ -202,7 +220,9 @@
             padding: 14px;
             border-radius: 18px;
             color: var(--text-primary);
-            font-family: 'Tajawal';
+            font-family: 'Tajawal', 'Cairo', 'Reem Kufi', sans-serif;
+            direction: rtl;
+
             width: 100%;
             font-size: 0.95rem;
             backdrop-filter: blur(5px);
@@ -307,61 +327,169 @@
         .photo-frame {
             width: 580px;
             height: 600px;
-            background: rgba(255, 250, 240, 0.25);
-            backdrop-filter: blur(6px);
+
             padding: 15px;
+            background: rgba(255, 250, 240, 0.25);
+
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-            /* border: 2px solid var(--accent-gold);  <-- REMOVED per request */
+
             display: none;
-            /* hidden until photo */
+            position: relative;
         }
 
-        /* shapes attached via class */
-        .shape-arch {
-            clip-path: polygon(0 100%, 0 20%, 50% 0, 100% 20%, 100% 100%);
-        }
-
-        .shape-circle {
-            border-radius: 50%;
-            clip-path: circle(50%);
-        }
-
-        .shape-star {
-            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 75%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-        }
-
-        .shape-islamic {
-            clip-path: polygon(50% 0%, 61% 12%, 80% 10%, 88% 28%, 100% 35%, 95% 53%, 100% 70%, 85% 82%, 75% 100%, 50% 90%, 25% 100%, 15% 82%, 0% 70%, 5% 53%, 0% 35%, 12% 28%, 20% 10%, 39% 12%);
-        }
-
-        .shape-heart {
-            clip-path: polygon(50% 0%, 93% 35%, 80% 100%, 50% 80%, 20% 100%, 7% 35%);
-        }
-
-        .shape-diamond {
-            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-        }
-
-        .shape-pentagon {
-            clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
-        }
-
-        .shape-hexagon {
-            clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
-        }
-
-        .shape-octagon {
-            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
-        }
-
-        .shape-leaf {
-            clip-path: polygon(50% 0%, 80% 20%, 100% 50%, 80% 80%, 50% 100%, 20% 80%, 0% 50%, 20% 20%);
+        .photo-inner {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
         }
 
         .user-photo-final {
             width: 100%;
             height: 100%;
             object-fit: cover;
+        }
+
+        /* shapes attached via class */
+
+        /* RECT */
+        .shape-rect,
+        .shape-rect .photo-inner {
+            border-radius: 0.5rem;
+            clip-path: none;
+        }
+
+        /* ARCH */
+        .shape-arch,
+        .shape-arch .photo-inner {
+            clip-path: polygon(0 100%, 0 20%, 50% 0, 100% 20%, 100% 100%);
+        }
+
+        /* CIRCLE */
+        .shape-circle,
+        .shape-circle .photo-inner {
+            border-radius: 50%;
+            clip-path: circle(50%);
+        }
+
+        /* STAR */
+        .shape-star,
+        .shape-star .photo-inner {
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%,
+                    50% 75%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+        }
+
+        /* ISLAMIC */
+        .shape-islamic,
+        .shape-islamic .photo-inner {
+            clip-path: polygon(50% 0%, 61% 12%, 80% 10%, 88% 28%, 100% 35%,
+                    95% 53%, 100% 70%, 85% 82%, 75% 100%, 50% 90%,
+                    25% 100%, 15% 82%, 0% 70%, 5% 53%, 0% 35%,
+                    12% 28%, 20% 10%, 39% 12%);
+        }
+
+        /* HEART */
+        .shape-heart,
+        .shape-heart .photo-inner {
+            clip-path: polygon(50% 0%, 93% 35%, 80% 100%, 50% 80%, 20% 100%, 7% 35%);
+        }
+
+        /* DIAMOND */
+        .shape-diamond,
+        .shape-diamond .photo-inner {
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+        }
+
+        /* PENTAGON */
+        .shape-pentagon,
+        .shape-pentagon .photo-inner {
+            clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
+        }
+
+        /* HEXAGON */
+        .shape-hexagon,
+        .shape-hexagon .photo-inner {
+            clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+        }
+
+        /* OCTAGON */
+        .shape-octagon,
+        .shape-octagon .photo-inner {
+            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+        }
+
+        /* LEAF */
+        .shape-leaf,
+        .shape-leaf .photo-inner {
+            clip-path: polygon(50% 0%, 80% 20%, 100% 50%, 80% 80%, 50% 100%, 20% 80%, 0% 50%, 20% 20%);
+        }
+
+        /* ---------------------- */
+        /* NEW SHAPES */
+        /* ---------------------- */
+
+        /* FLOWER */
+        .shape-flower,
+        .shape-flower .photo-inner {
+            clip-path: polygon(50% 0%, 65% 20%, 90% 20%, 75% 45%,
+                    90% 70%, 65% 70%, 50% 100%, 35% 70%,
+                    10% 70%, 25% 45%, 10% 20%, 35% 20%);
+        }
+
+        /* CLOUD */
+        .shape-cloud,
+        .shape-cloud .photo-inner {
+            clip-path: polygon(20% 70%, 10% 55%, 20% 40%, 35% 40%,
+                    40% 25%, 60% 25%, 65% 40%, 80% 40%,
+                    90% 55%, 80% 70%, 60% 75%, 40% 75%);
+        }
+
+        /* STARBURST */
+        .shape-burst,
+        .shape-burst .photo-inner {
+            clip-path: polygon(50% 0%, 60% 30%, 90% 20%, 70% 50%,
+                    90% 80%, 60% 70%, 50% 100%, 40% 70%,
+                    10% 80%, 30% 50%, 10% 20%, 40% 30%);
+        }
+
+        /* ROUNDED DIAMOND */
+        .shape-rounded-diamond,
+        .shape-rounded-diamond .photo-inner {
+            clip-path: polygon(50% 0%, 85% 50%, 50% 100%, 15% 50%);
+            border-radius: 20px;
+        }
+
+        /* RAMADAN LANTERN */
+        .shape-lantern,
+        .shape-lantern .photo-inner {
+            clip-path: polygon(50% 0%, 65% 10%, 65% 25%, 80% 35%,
+                    80% 75%, 65% 90%, 35% 90%, 20% 75%,
+                    20% 35%, 35% 25%, 35% 10%);
+        }
+
+        /* CRESCENT MOON */
+        .shape-crescent,
+        .shape-crescent .photo-inner {
+            clip-path: polygon(60% 0%, 80% 10%, 95% 35%, 95% 65%,
+                    80% 90%, 60% 100%, 40% 95%, 55% 75%,
+                    60% 50%, 55% 25%, 40% 5%);
+        }
+
+        /* ISLAMIC 8 STAR */
+        .shape-islamic-star,
+        .shape-islamic-star .photo-inner {
+            clip-path: polygon(50% 0%, 60% 20%, 80% 20%, 70% 40%,
+                    100% 50%, 70% 60%, 80% 80%, 60% 80%,
+                    50% 100%, 40% 80%, 20% 80%, 30% 60%,
+                    0% 50%, 30% 40%, 20% 20%, 40% 20%);
+        }
+
+        /* MOSQUE */
+        .shape-mosque,
+        .shape-mosque .photo-inner {
+            clip-path: polygon(0% 100%, 0% 55%, 10% 55%, 10% 25%,
+                    18% 25%, 18% 55%, 35% 55%, 50% 35%,
+                    65% 55%, 82% 55%, 82% 25%, 90% 25%,
+                    90% 55%, 100% 55%, 100% 100%);
         }
 
         .greeting-line {
@@ -387,6 +515,8 @@
         }
 
         .generated-greeting {
+            direction: rtl;
+            unicode-bidi: plaintext;
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
             padding: 40px 30px;
@@ -409,12 +539,20 @@
         }
 
         .sender-block {
-            margin-top: 20px;
-            padding-top: 15px;
+            direction: rtl;
+            unicode-bidi: plaintext;
+            margin-top: 22px;
+            padding-top: 16px;
             border-top: 1px solid var(--accent-gold);
-            font-size: 30px;
-            font-weight: 500;
-            opacity: 0.9;
+
+            font-size: 44px;
+            /* larger */
+            font-weight: 900;
+
+            color: var(--accent-gold);
+
+
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
         }
 
         .action-btns {
@@ -485,6 +623,31 @@
             max-width: 100%;
             max-height: 280px;
         }
+
+        .theme-picker {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .theme-btn {
+            padding: 6px 12px;
+            border: 2px solid var(--glass-border);
+            border-radius: 12px;
+            background: var(--glass-bg);
+            color: var(--text-primary);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+        }
+
+        .theme-btn:hover,
+        .theme-btn.active {
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 10px var(--accent-gold);
+        }
     </style>
 </head>
 
@@ -515,6 +678,17 @@
         </div>
 
         <section class="editor-box">
+
+            <div class="section-label"><i class="fas fa-palette"></i> اختر ثيم</div>
+            <div class="theme-picker">
+                <button class="theme-btn" data-theme="classic">🌟 كلاسيك ذهبي</button>
+                <button class="theme-btn" data-theme="dark">🌙 الوضع الليلي</button>
+                <button class="theme-btn" data-theme="spring">🌿 ربيع أخضر</button>
+                <button class="theme-btn" data-theme="sunset">🌅 الغروب</button>
+                <button class="theme-btn" data-theme="rose">🌹 وردي رومانسي</button>
+                <button class="theme-btn" data-theme="ocean">🌊 أزرق المحيط</button>
+            </div>
+
             <div class="section-label"><i class="fas fa-palette"></i> خلفية البطاقة</div>
             <div class="slider-wrapper">
                 <button class="nav-btn" onclick="slideSlider('bgSlider', 100)"><i
@@ -526,7 +700,31 @@
                         <input type="file" id="bgUpload" hidden accept="image/*">
                     </label>
                     <!-- الخلفيات المطلوبة بالضبط (مع بيانات وهمية ./1.jpg الخ) -->
-                    <div class="bg-option active" data-bg="./1.jpg" style="background-image:url('./1.jpg')"></div>
+                    <div class="bg-option" data-bg="./9.jpg" style="background-image:url('./9.jpg')"></div>
+                    <div class="bg-option" data-bg="./10.jpg" style="background-image:url('./10.jpg')"></div>
+                    <div class="bg-option" data-bg="./11.jpg" style="background-image:url('./11.jpg')"></div>
+                    <div class="bg-option" data-bg="./12.jpg" style="background-image:url('./12.jpg')"></div>
+                    <div class="bg-option" data-bg="./13.jpg" style="background-image:url('./13.jpg')"></div>
+                    <div class="bg-option active" data-bg="./14.jpg" style="background-image:url('./14.jpg')"></div>
+                    <div class="bg-option" data-bg="./15.jpg" style="background-image:url('./15.jpg')"></div>
+                    <div class="bg-option" data-bg="./16.jpg" style="background-image:url('./16.jpg')"></div>
+                    <div class="bg-option" data-bg="./17.jpg" style="background-image:url('./17.jpg')"></div>
+                    <div class="bg-option" data-bg="./18.jpg" style="background-image:url('./18.jpg')"></div>
+                    <div class="bg-option" data-bg="./19.jpg" style="background-image:url('./19.jpg')"></div>
+                    <div class="bg-option" data-bg="./20.jpg" style="background-image:url('./20.jpg')"></div>
+                    <div class="bg-option" data-bg="./21.jpg" style="background-image:url('./21.jpg')"></div>
+                    <div class="bg-option" data-bg="./22.jpg" style="background-image:url('./22.jpg')"></div>
+                    <div class="bg-option" data-bg="./23.jpg" style="background-image:url('./23.jpg')"></div>
+                    <div class="bg-option" data-bg="./24.jpg" style="background-image:url('./24.jpg')"></div>
+                    <div class="bg-option" data-bg="./25.jpg" style="background-image:url('./25.jpg')"></div>
+                    <div class="bg-option" data-bg="./26.jpg" style="background-image:url('./26.jpg')"></div>
+                    <div class="bg-option" data-bg="./27.jpg" style="background-image:url('./27.jpg')"></div>
+                    <div class="bg-option" data-bg="./28.jpg" style="background-image:url('./28.jpg')"></div>
+                    <div class="bg-option" data-bg="./29.jpg" style="background-image:url('./29.jpg')"></div>
+                    <div class="bg-option" data-bg="./30.jpg" style="background-image:url('./30.jpg')"></div>
+                    <div class="bg-option" data-bg="./31.jpg" style="background-image:url('./31.jpg')"></div>
+
+                    <div class="bg-option" data-bg="./1.jpg" style="background-image:url('./1.jpg')"></div>
                     <div class="bg-option" data-bg="./2.jpg" style="background-image:url('./2.jpg')"></div>
                     <div class="bg-option" data-bg="./3.png" style="background-image:url('./3.png')"></div>
                     <div class="bg-option" data-bg="./4.jpg" style="background-image:url('./4.jpg')"></div>
@@ -558,7 +756,10 @@
                 <button class="nav-btn" onclick="slideSlider('shapeSlider', 100)"><i
                         class="fas fa-chevron-right"></i></button>
                 <div class="shape-selector" id="shapeSlider">
-                    <div class="shape-option active" data-shape="shape-arch"><i class="fas fa-archway"></i></div>
+                    <div class="shape-option active" data-shape="shape-rect">
+                        <i class="fas fa-square"></i>
+                    </div>
+                    <div class="shape-option" data-shape="shape-arch"><i class="fas fa-archway"></i></div>
                     <div class="shape-option" data-shape="shape-circle"><i class="far fa-circle"></i></div>
                     <div class="shape-option" data-shape="shape-star"><i class="fas fa-star"></i></div>
                     <div class="shape-option" data-shape="shape-islamic"><i class="fas fa-star-and-crescent"></i></div>
@@ -568,6 +769,27 @@
                     <div class="shape-option" data-shape="shape-hexagon"><i class="fas fa-draw-polygon"></i></div>
                     <div class="shape-option" data-shape="shape-octagon"><i class="fas fa-certificate"></i></div>
                     <div class="shape-option" data-shape="shape-leaf"><i class="fas fa-leaf"></i></div>
+
+                    <div class="shape-option" data-shape="shape-flower"><i class="fas fa-spa"></i></div>
+                    <div class="shape-option" data-shape="shape-cloud"><i class="fas fa-cloud"></i></div>
+                    <div class="shape-option" data-shape="shape-burst"><i class="fas fa-sun"></i></div>
+                    <div class="shape-option" data-shape="shape-rounded-diamond"><i class="fas fa-gem"></i></div>
+
+                    <div class="shape-option" data-shape="shape-lantern">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+
+                    <div class="shape-option" data-shape="shape-crescent">
+                        <i class="fas fa-moon"></i>
+                    </div>
+
+                    <div class="shape-option" data-shape="shape-islamic-star">
+                        <i class="fas fa-star-and-crescent"></i>
+                    </div>
+
+                    <div class="shape-option" data-shape="shape-mosque">
+                        <i class="fas fa-mosque"></i>
+                    </div>
                 </div>
                 <button class="nav-btn" onclick="slideSlider('shapeSlider', -100)"><i
                         class="fas fa-chevron-left"></i></button>
@@ -583,10 +805,12 @@
         <article class="preview-area" id="previewContainer">
             <div id="scaleWrapper" class="scale-wrapper">
                 <div id="card" class="card">
-                    <div id="photoFrame" class="photo-frame shape-arch">
-                        <img id="finalPhotoDisplay" class="user-photo-final"
-                            src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23d4af37' opacity='0.2'/%3E%3C/svg%3E">
+                    <div id="photoFrame" class="photo-frame shape-rect">
+                        <div class="photo-inner">
+                            <img id="finalPhotoDisplay" class="user-photo-final">
+                        </div>
                     </div>
+
                     <div class="text-content-wrapper">
                         <div id="displayGreetingText" class="generated-greeting"></div>
                     </div>
@@ -600,6 +824,186 @@
             <button class="btn btn-share" onclick="shareCard()"><i class="fa-solid fa-share-nodes"></i></button>
         </section>
     </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // ---------- APPLY FIRST THEME BY DEFAULT ----------
+            const firstThemeBtn = document.querySelector('.theme-btn');
+            if (firstThemeBtn) {
+                const theme = firstThemeBtn.dataset.theme;
+                const vars = themes[theme];
+                for (let key in vars) {
+                    document.documentElement.style.setProperty(key, vars[key]);
+                }
+                // highlight first button as active
+                document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+                firstThemeBtn.classList.add('active');
+            }
+
+            // ---------- EXISTING THEME BUTTON LOGIC ----------
+            document.querySelectorAll('.theme-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const theme = btn.dataset.theme;
+                    const vars = themes[theme];
+                    for (let key in vars) {
+                        document.documentElement.style.setProperty(key, vars[key]);
+                    }
+                    // highlight active button
+                    document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                });
+            });
+
+            const cardDiv = document.querySelector('.card');
+            const bgOptions = document.querySelectorAll('.bg-option');
+
+            // Set initial active background (the one with .active)
+            const activeOption = document.querySelector('.bg-option.active');
+            if (activeOption) {
+                const bg = activeOption.dataset.bg;
+                if (bg === 'gradient') {
+                    cardDiv.style.backgroundImage = 'var(--card-bg-gradient)';
+                } else {
+                    cardDiv.style.backgroundImage = `url('${bg}')`;
+                }
+            }
+
+            // Add click listeners
+            bgOptions.forEach(opt => {
+                opt.addEventListener('click', function () {
+                    document.querySelector('.bg-option.active')?.classList.remove('active');
+                    this.classList.add('active');
+
+                    const bg = this.dataset.bg;
+                    if (bg === 'gradient') {
+                        cardDiv.style.backgroundImage = 'var(--card-bg-gradient)';
+                    } else {
+                        cardDiv.style.backgroundImage = `url('${bg}')`;
+                    }
+                });
+            });
+        });
+
+        const themes = {
+            classic: {
+                '--bg-page': '#f4e1c2',            // stronger beige
+                '--glass-bg': 'rgba(255, 255, 245, 0.85)',
+                '--glass-border': 'rgba(200, 140, 60, 0.5)',
+                '--text-primary': '#2a1f0e',
+                '--text-soft': '#5c3d1e',
+                '--accent-gold': '#d49a0f',        // richer gold
+                '--soft-gold': '#f0c96d',
+                '--btn-hd': 'linear-gradient(135deg, #b87a22 0%, #e0b84f 100%)',
+                '--btn-4k': 'linear-gradient(135deg, #c08c3b 0%, #f0d37a 100%)',
+                '--btn-share': 'linear-gradient(135deg, #1e6a4d 0%, #2fb67a 100%)',
+                '--card-bg-gradient': 'linear-gradient(135deg, #f9e2b7 0%, #f3d39a 100%)',
+                '--input-bg': 'rgba(255, 245, 220, 0.9)',
+                '--modal-bg': '#f2e1c0',
+                '--star-color': '#d49a0f',
+                '--shadow': '0 12px 30px rgba(0,0,0,0.12)'
+            },
+            dark: {
+                '--bg-page': '#0b0d17',            // deeper dark
+                '--glass-bg': 'rgba(30, 35, 55, 0.85)',
+                '--glass-border': 'rgba(220, 175, 50, 0.4)',
+                '--text-primary': '#f7f0dd',
+                '--text-soft': '#d4c28f',
+                '--accent-gold': '#f0b71f',
+                '--soft-gold': '#a6813f',
+                '--btn-hd': 'linear-gradient(135deg, #1c2c78 0%, #3f66f7 100%)',
+                '--btn-4k': 'linear-gradient(135deg, #d49a0f 0%, #f0c93d 100%)',
+                '--btn-share': 'linear-gradient(135deg, #0f5e4b 0%, #17b17c 100%)',
+                '--card-bg-gradient': 'linear-gradient(135deg, #1a1c2e 0%, #2a2d42 100%)',
+                '--input-bg': 'rgba(20, 25, 45, 0.9)',
+                '--modal-bg': '#232a3a',
+                '--star-color': '#f0b71f',
+                '--shadow': '0 20px 50px rgba(0,0,0,0.55)'
+            },
+            spring: {
+                '--bg-page': '#c5f4d2',            // strong green
+                '--glass-bg': 'rgba(220, 255, 235, 0.9)',
+                '--glass-border': 'rgba(80, 200, 130, 0.5)',
+                '--text-primary': '#1b3c28',
+                '--text-soft': '#3b6b45',
+                '--accent-gold': '#38b060',        // rich leaf green
+                '--soft-gold': '#7fd3a2',
+                '--btn-hd': 'linear-gradient(135deg, #3fc57c 0%, #6de0b0 100%)',
+                '--btn-4k': 'linear-gradient(135deg, #27a060 0%, #5fd0a0 100%)',
+                '--btn-share': 'linear-gradient(135deg, #1e7a4d 0%, #48b084 100%)',
+                '--card-bg-gradient': 'linear-gradient(135deg, #c7f3d9 0%, #a8eac0 100%)',
+                '--input-bg': 'rgba(230, 255, 235, 0.85)',
+                '--modal-bg': '#d0f4d8',
+                '--star-color': '#38b060',
+                '--shadow': '0 12px 30px rgba(0,0,0,0.15)'
+            },
+            sunset: {
+                '--bg-page': '#ffd2a6',            // more orange
+                '--glass-bg': 'rgba(255, 220, 200, 0.9)',
+                '--glass-border': 'rgba(255, 140, 60, 0.5)',
+                '--text-primary': '#703218',
+                '--text-soft': '#b86a3d',
+                '--accent-gold': '#ff7b1f',
+                '--soft-gold': '#ffc16a',
+                '--btn-hd': 'linear-gradient(135deg, #ff6525 0%, #ff9a5b 100%)',
+                '--btn-4k': 'linear-gradient(135deg, #ff5c20 0%, #ffb078 100%)',
+                '--btn-share': 'linear-gradient(135deg, #e65a1b 0%, #ff9b5c 100%)',
+                '--card-bg-gradient': 'linear-gradient(135deg, #ffd7b3 0%, #ffc18c 100%)',
+                '--input-bg': 'rgba(255, 235, 220, 0.85)',
+                '--modal-bg': '#ffd8b0',
+                '--star-color': '#ff7b1f',
+                '--shadow': '0 12px 30px rgba(0,0,0,0.15)'
+            },
+            rose: {
+                '--bg-page': '#ffb6d1',            // strong pink
+                '--glass-bg': 'rgba(255, 200, 225, 0.9)',
+                '--glass-border': 'rgba(255, 100, 140, 0.5)',
+                '--text-primary': '#5b1c38',
+                '--text-soft': '#9d3f66',
+                '--accent-gold': '#ff4f8c',
+                '--soft-gold': '#ff8fb5',
+                '--btn-hd': 'linear-gradient(135deg, #ff3f70 0%, #ff749d 100%)',
+                '--btn-4k': 'linear-gradient(135deg, #ff2a5b 0%, #ff6f92 100%)',
+                '--btn-share': 'linear-gradient(135deg, #e62055 0%, #ff7290 100%)',
+                '--card-bg-gradient': 'linear-gradient(135deg, #ffb3d6 0%, #ff87c1 100%)',
+                '--input-bg': 'rgba(255, 230, 240, 0.9)',
+                '--modal-bg': '#ffbfdc',
+                '--star-color': '#ff4f8c',
+                '--shadow': '0 12px 30px rgba(0,0,0,0.15)'
+            },
+            ocean: {
+                '--bg-page': '#99d4ff',            // vivid blue
+                '--glass-bg': 'rgba(200, 230, 255, 0.9)',
+                '--glass-border': 'rgba(50, 120, 255, 0.5)',
+                '--text-primary': '#1a3b5a',
+                '--text-soft': '#416c9d',
+                '--accent-gold': '#1fa0ff',
+                '--soft-gold': '#66c9ff',
+                '--btn-hd': 'linear-gradient(135deg, #276fb3 0%, #66aaff 100%)',
+                '--btn-4k': 'linear-gradient(135deg, #1a4f91 0%, #66b0ff 100%)',
+                '--btn-share': 'linear-gradient(135deg, #1f3f70 0%, #4f91ff 100%)',
+                '--card-bg-gradient': 'linear-gradient(135deg, #99d4ff 0%, #66baff 100%)',
+                '--input-bg': 'rgba(220, 245, 255, 0.9)',
+                '--modal-bg': '#b6dfff',
+                '--star-color': '#1fa0ff',
+                '--shadow': '0 12px 30px rgba(0,0,0,0.15)'
+            }
+        };
+        // Apply theme and highlight active button
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Apply theme
+                const theme = btn.dataset.theme;
+                const vars = themes[theme];
+                for (let key in vars) {
+                    document.documentElement.style.setProperty(key, vars[key]);
+                }
+                // Highlight active button
+                document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+
+    </script>
 
     <script>
         (function () {
@@ -626,6 +1030,7 @@
             const themeToggle = document.getElementById('themeToggleBtn');
             const themeIcon = document.getElementById('themeIcon');
             const body = document.body;
+
 
             // ---------- THEME TOGGLE ----------
             function setTheme(theme) {
@@ -654,7 +1059,7 @@
                 const from = fromInput.value.trim() || "";
 
                 const toHtml = to ? `<span class="highlight-gold">${to}</span>` : "";
-                const senderHtml = from ? `<div class="sender-block">من: ${from}</div>` : "";
+                const senderHtml = from ? `<div class="sender-block">${from}</div>` : "";
 
                 // قسم الرسالة إلى أسطر
                 const msgLines = (msgInput.value.trim() || defaultMsg)
@@ -750,6 +1155,11 @@
             // ---------- HELPER: INTERNAL CAPTURE ----------
             async function captureCard(multiplier) {
 
+                // RECT: التأكد من تحميل جميع الخطوط قبل التصدير
+                if (document.fonts && document.fonts.ready) {
+                    await document.fonts.ready;
+                }
+
                 const card = document.getElementById("card");
                 const scaleWrapper = document.getElementById("scaleWrapper");
 
@@ -765,6 +1175,13 @@
 
                 card.style.width = "1080px";
                 card.style.height = "1350px";
+
+                // Force style for html2canvas
+                const frame = document.getElementById("photoFrame");
+                const computed = window.getComputedStyle(frame);
+
+                frame.style.clipPath = computed.clipPath;
+                frame.style.borderRadius = computed.borderRadius;
 
                 const canvas = await html2canvas(card, {
                     scale: multiplier,
