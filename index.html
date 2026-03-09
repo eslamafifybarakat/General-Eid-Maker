@@ -747,6 +747,32 @@
                 document.getElementById('scaleWrapper').style.transform = `scale(${scale})`;
             }
 
+            // ---------- HELPER: INTERNAL CAPTURE ----------
+            async function captureCard(multiplier) {
+                const card = document.getElementById('card');
+                const scaleWrapper = document.getElementById('scaleWrapper');
+
+                // 1. Save current mobile scale and reset to 1
+                const originalTransform = scaleWrapper.style.transform;
+                scaleWrapper.style.transform = "scale(1)";
+
+                // 2. Perform capture
+                const canvas = await html2canvas(card, {
+                    scale: multiplier,      // Controls quality (1.5 for HD, 3 for 4K)
+                    useCORS: true,          // Essential for external images/photos
+                    allowTaint: false,
+                    width: 1080,            // Force output width
+                    height: 1350,           // Force output height
+                    backgroundColor: null,
+                    logging: false
+                });
+
+                // 3. Restore the mobile view scale
+                scaleWrapper.style.transform = originalTransform;
+
+                return canvas;
+            }
+
             // ---------- EXPORT IMAGE ----------
             window.exportImage = async function (q) {
                 const btn = event.currentTarget;
@@ -754,70 +780,49 @@
                 btn.innerHTML = '<i class="fa fa-spinner fa-pulse"></i>';
 
                 try {
-                    const card = document.getElementById('card');
-
-                    // 1. Capture the canvas with specific dimensions
-                    const canvas = await html2canvas(card, {
-                        scale: q,             // q=1 for standard, q=2+ for sharper text
-                        useCORS: true,
-                        width: 1080,          // Force source width
-                        height: 1350,         // Force source height
-                        backgroundColor: null,
-                        logging: false,
-                        onclone: (clonedDoc) => {
-                            // 2. Ensure the cloned element isn't affected by CSS transforms/scaling
-                            const clonedCard = clonedDoc.getElementById('card');
-                            clonedCard.style.transform = "none";
-                            clonedCard.style.width = "1080px";
-                            clonedCard.style.height = "1350px";
-                        }
-                    });
-
+                    const canvas = await captureCard(q);
                     const link = document.createElement('a');
-                    link.download = `Eid_card_${Date.now()}.png`;
-                    link.href = canvas.toDataURL('image/png');
+                    link.download = `Eid_Card_${Date.now()}.png`;
+                    link.href = canvas.toDataURL('image/png', 1.0);
                     link.click();
                 } catch (err) {
                     console.error(err);
-                    alert('حدث خطأ بالتصدير');
+                    alert('حدث خطأ أثناء التصدير');
+                } finally {
+                    btn.innerHTML = oldHtml;
                 }
-                btn.innerHTML = oldHtml;
             };
 
             // ---------- SHARE ----------
             window.shareCard = async function () {
-                const card = document.getElementById('card');
+                const btn = event.currentTarget;
+                const oldHtml = btn.innerHTML;
+                btn.innerHTML = '<i class="fa fa-spinner fa-pulse"></i>';
 
-                // We use a scale that ensures high quality for sharing
-                const canvas = await html2canvas(card, {
-                    width: 1080,
-                    height: 1350,
-                    scale: 2, // High DPI for mobile sharing
-                    useCORS: true,
-                    onclone: (clonedDoc) => {
-                        const clonedCard = clonedDoc.getElementById('card');
-                        clonedCard.style.transform = "none";
-                    }
-                });
+                try {
+                    // Use 1.5 multiplier for a high-quality share (1620x2025) 
+                    // that isn't a massive file size.
+                    const canvas = await captureCard(1.5);
 
-                canvas.toBlob(async (blob) => {
-                    if (!blob) return;
-                    const file = new File([blob], 'eid_card.png', { type: 'image/png' });
+                    canvas.toBlob(async (blob) => {
+                        if (!blob) return;
+                        const file = new File([blob], 'eid_card.png', { type: 'image/png' });
 
-                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                        try {
+                        if (navigator.canShare && navigator.canShare({ files: [file] })) {
                             await navigator.share({
                                 files: [file],
-                                title: 'بطاقة تهنئة العيد',
-                                text: 'كل عام وأنتم بخير'
+                                title: 'بطاقة العيد',
+                                text: 'كل عام وأنتم بخير ✨'
                             });
-                        } catch (err) {
-                            console.log("User cancelled sharing");
+                        } else {
+                            alert('المشاركة المباشرة غير مدعومة. يرجى تحميل الصورة أولاً.');
                         }
-                    } else {
-                        alert('المتصفح لا يدعم المشاركة المباشرة، يرجى حفظ الصورة أولاً');
-                    }
-                }, 'image/png');
+                    }, 'image/png', 0.9);
+                } catch (err) {
+                    console.error(err);
+                } finally {
+                    btn.innerHTML = oldHtml;
+                }
             };
 
             // ---------- STARS BACKGROUND ----------
